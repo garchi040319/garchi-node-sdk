@@ -1,5 +1,5 @@
 {
-  "name": "@garchicms/garchi-sdk",
+  "name": "@garchicms/garchi-node-sdk",
   "description": "Node SDK for light weight wrapper for Garchi CMS API",
   "version": "0.0.1",
   "main": "dist/index.js",

@@ -15,7 +15,7 @@ GarchiCMS SDK is a TypeScript library for interacting with the Garchi CMS API. I
 ## Installation
 
 ```bash
-npm install garchi-sdk-node
+npm install @garchicms/garchi-node-sdk
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ npm install garchi-sdk-node
 ### Importing the SDK
 
 ```typescript
-import GarchiCMS from 'garchi-sdk-node';
+import GarchiCMS from '@garchicms/garchi-node-sdk';
 ```
 
 ### Initializing the Client
