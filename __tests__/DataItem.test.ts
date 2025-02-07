@@ -1,7 +1,7 @@
-import { APIKEY, SPACEUID } from "../test_prepare";
+import { APIKEY, SPACEUID } from "../src/test_prepare";
 
 import MockAdapter from "axios-mock-adapter";
-import GarchiCMS from "../services/GarchiCMS";
+import GarchiCMS from "../src/services/GarchiCMS";
 import {
   CreateDataItemParams,
   DeleteDataItemParams,
@@ -19,8 +19,8 @@ import {
   GetItemsByIdsParams,
   GarchiItem,
   GarchiItemAPIResponse,
-} from "../types";
-import APIClient from "../services/APIClient";
+} from "../src/types";
+import APIClient from "../src/services/APIClient";
 
 // Mocking axios
 const apiClient = new APIClient ({ api_key: APIKEY }).client;
@@ -52,7 +52,7 @@ describe("DataItem API Wrapper", () => {
 
     mock.onPost("/delete/item").reply(200, mockData);
 
-    const response = await client.dataItem.deleteItem(params);
+    const response = await client.dataItem.delete(params);
     expect(response).toEqual("Item deleted successfully");
   });
 
@@ -132,7 +132,7 @@ describe("DataItem API Wrapper", () => {
 
     mock.onGet(`/item/${params.item}`).reply(200, mockData);
 
-    const response = await client.dataItem.getItem(params);
+    const response = await client.dataItem.get(params);
     expect(response).toEqual(mockData.data[0]);
   });
 

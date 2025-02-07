@@ -1,0 +1,11 @@
+{
+    "entryPoints": [
+      "src/services/GarchiCMS.ts",
+    ],
+    "out": "docs",
+    "plugin": ["typedoc-plugin-markdown"],
+    "includeVersion": true,
+    "excludeNotDocumented": false,
+    "tsconfig": "tsconfig.json"
+  }
+  

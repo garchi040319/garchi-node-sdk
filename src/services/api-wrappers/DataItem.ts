@@ -5,6 +5,7 @@ import APIClient from "../APIClient";
 
 class DataItem extends APIClient {
 
+
     async create(params: CreateDataItemParams): Promise<GarchiItem> {
         try {
             const response = await this.client.post("/item", params);
@@ -17,7 +18,7 @@ class DataItem extends APIClient {
         }
     }
 
-    async deleteItem(params: DeleteDataItemParams): Promise<string> {
+    async delete(params: DeleteDataItemParams): Promise<string> {
         try {
             const response = await this.client.post(`/delete/item`, params);
             const data = response.data as {
@@ -118,13 +119,13 @@ class DataItem extends APIClient {
         }
     }
 
-    async getItem(params: GetItemParams): Promise<GarchiItem> {
+    async get(params: GetItemParams): Promise<GarchiItem> {
         try {
             const response = await this.client.get(`/item/${params.item}`, {
                 params: params,
             });
             const data = response.data as GarchiItemAPIResponse
-            return data.data[0];
+            return data.data[0] as GarchiItem;
         }
         catch (error: any) {
             throw error.response?.data || new Error("Network Error");

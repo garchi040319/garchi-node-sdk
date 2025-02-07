@@ -18,7 +18,7 @@ class Headless extends APIClient {
 
     async getPage(params: GetPageParams) : Promise<GarchiPage> {
         try {
-            const response = await this.client.post(`/page/`, params);
+            const response = await this.client.post(`/page`, params);
             return response.data as GarchiPage;
         }
         catch (error: any) {

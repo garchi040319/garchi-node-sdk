@@ -43,7 +43,7 @@ class Review extends APIClient{
         }
     }
 
-    async get(item_id: number | string, queryParams: PaginateQueryParams) : Promise<PaginatedResponse<GarchiReview>> {
+    async getByItem(item_id: number | string, queryParams: PaginateQueryParams) : Promise<PaginatedResponse<GarchiReview>> {
         try {
             const response = await this.client.get(`/reviews/item/${item_id}`, {
                 params: queryParams

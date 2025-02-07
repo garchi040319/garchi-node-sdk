@@ -84,6 +84,19 @@ class Space extends APIClient {
         }
     }
 
+    async delete(space_uid: string) : Promise<string> {
+        try {
+            const response = await this.client.delete(`/delete/space/${space_uid}`);
+            const data = response.data as {
+                data: string
+            }
+            return data.data;
+        }
+        catch (error: any) {
+            throw error.response?.data || new Error("Network Error");
+        }
+    }
+
 }
 
 

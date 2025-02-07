@@ -1,13 +1,13 @@
-import { APIKEY, SPACEUID } from "../test_prepare";
-import APIClient from "../services/APIClient";
+import { APIKEY, SPACEUID } from "../src/test_prepare";
+import APIClient from "../src/services/APIClient";
 import MockAdapter from "axios-mock-adapter";
-import GarchiCMS from "../services/GarchiCMS";
+import GarchiCMS from "../src/services/GarchiCMS";
 import { 
   CreateCategoryParams, 
   DeleteCategoryParams, 
   UpdateCategoryParams, 
   GarchiCategory 
-} from "../types";
+} from "../src/types";
 
 const apiClientInstance = new APIClient({ api_key: APIKEY }).client;
 const mock = new MockAdapter(apiClientInstance);

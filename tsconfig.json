@@ -1,17 +1,21 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",               // Output compiled JS files to 'dist'
-    "rootDir": "./src",               // Set 'src' as the root directory
-    "module": "CommonJS",             // Use CommonJS for compatibility
-    "target": "ES6",                  // Target ES6 for better compatibility
+    "noEmit": false,
+    "allowJs": true,                  // Disallow JavaScript files
+    "module": "Preserve",             
+    "target": "ESNext",                  // Target ES6 for better compatibility
     "strict": true,                    // Enable strict type checking
     "esModuleInterop": true,           // Ensure compatibility with ES modules
-    "moduleResolution": "node",        // Use Node.js module resolution
     "resolveJsonModule": true,         // Allow importing JSON files
-    "declaration": true,               // Generate TypeScript declaration files (.d.ts)
-    "sourceMap": true,              // Enable source maps for debugging
-    "declarationDir": "./dist"
+  
+    "allowSyntheticDefaultImports": true,
+   
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
   },
   "include": ["src/**/*"],                  // Include only the 'src' folder
   "exclude": ["node_modules", "dist"]  // Exclude unnecessary files from compilation
 }
+

@@ -16,6 +16,7 @@ class APIClient {
                 "Authorization": `Bearer ${options?.api_key || process.env.GARCHI_API_KEY}`
             }
         })
+
     }
 }
 
