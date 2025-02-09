@@ -13,7 +13,8 @@ class APIClient {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Authorization": `Bearer ${options?.api_key || process.env.GARCHI_API_KEY}`
+                "Authorization": `Bearer ${options?.api_key || process.env.GARCHI_API_KEY}`,
+                ...options?.headers
             }
         })
 
