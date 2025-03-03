@@ -40,6 +40,7 @@ export type GarchiPage = {
     title: string
     slug: string
     description: string
+    image?: string
     sections: GarchiSection[]
 }
 
