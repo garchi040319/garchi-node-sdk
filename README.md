@@ -21,10 +21,15 @@
     - [Add or Update Reaction](#add-or-update-reaction)
   - [Space API](#space-api)
     - [Create a Space](#create-a-space)
+    - [List Pages in a Space](#list-pages-in-a-space)
+    - [List Section Templates in a Space](#list-section-templates-in-a-space)
   - [Compound Query API](#compound-query-api)
     - [Perform a Compound Query](#perform-a-compound-query)
   - [Headless CMS API](#headless-cms-api)
     - [Get a Page](#get-a-page)
+    - [Get an asset](#get-an-asset)
+    - [Create Page](#create-page)
+    - [Add blank section to a page](#add-blank-section-to-a-page)
 - [Error Handling](#error-handling)
 - [Types and Interfaces](#types-and-interfaces)
 - [Contributing](#contributing)
@@ -211,6 +216,16 @@ const newSpace = await client.space.create({
 });
 ```
 
+#### List Pages in a Space
+```typescript
+const pages = await client.space.listPages("your_space_uid")
+```
+
+#### List Section Templates in a Space
+```typescript
+const sectionTemplates = await client.space.listSectionTemplates("your_space_uid")
+```
+
 ### Compound Query API
 
 #### Perform a Compound Query
@@ -236,6 +251,32 @@ const page = await client.headless.getPage({
   lang: 'en-US',
   mode: 'live'
 });
+```
+
+#### Get an asset
+```typescript
+const asset = await client.headless.getAsset("file_name", "your_space_uid" )
+```
+
+#### Create Page
+
+```typescript
+const page = await client.headless.addPage({
+  space_uid: "your_space_uid",
+  title: "Home",
+  path: "/",
+  description: "This is our Headless CMS SaaS"
+})
+```
+
+#### Add blank section to a page
+
+```typescript
+const section = await client.headless.addBlankSectionToPage({
+     section_template_id: "section_template_id"
+     parent_id: "id of the section if this is being added as nested section",
+     page_id: "page_id"
+})
 ```
 
 ## Error Handling

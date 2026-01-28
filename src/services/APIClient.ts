@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { GarchiCMSInitOptions } from "../types";
 
 class APIClient {
 
-    client: Axios.AxiosInstance
+    client: AxiosInstance
 
 
     constructor(options: GarchiCMSInitOptions | null) {

@@ -34,6 +34,41 @@ export interface GetPageParams {
     mode?: "draft" | "live";   // Optional mode of the page
 }
 
+export type BlankSectionRequest = {
+    page_id: string;
+    section_template_id: string;
+    parent_id?: string;
+}
+
+export type BlankSectionResponse = {
+    id: string;
+    name: string
+    description?: string
+    parent_id?: string | null
+    order: number
+    page_id: string
+    section_template_id: string
+
+}
+
+export type CreatePageRequest = {
+    space_uid: string;
+    title: string;
+    path: string;
+    description: string;
+}
+
+export type CreatePageResponse = {
+    id: string;
+    title: string;
+    path?: string;
+    slug?: string;
+    description: string;
+    image?: string;
+    created_at?: string;
+    last_updated?: string;
+    updated_at?: string;
+}
 
 export type GarchiPage = {
     id: string
@@ -45,7 +80,7 @@ export type GarchiPage = {
 }
 
 // Property Type for Section Template
-export type SectionPropType = "text" | "longtext" | "media" | "richtext" | "select";
+export type SectionPropType = "text" | "longtext" | "media" | "richtext" | "select" | "date" | "icon_hero" | "icon_lucid";
 
 // Property Interface for Section Template
 export interface SectionTemplateProp {
@@ -59,7 +94,8 @@ export interface SectionTemplate {
   name: string;                       // Name of the section template
   description?: string;               // Optional: Description of the section template
   prev_name?: string;                 // Optional: Previous name (for updating existing templates)
-  props?: SectionTemplateProp[];      // Optional: Array of properties for the section template
+  props?: SectionTemplateProp[];
+  id?: string;     
 }
 
 // API Request Body Interface
@@ -247,7 +283,7 @@ export interface UpdateDataItemParams {
 }
 
 
-export type MetaType = "string" | "array" | "url" | "object" | "numeric" | "email" | "date";
+export type MetaType = "string" | "array" | "url" | "object" | "numeric" | "email" | "date" | "color" | "icon_hero" | "icon_lucid";
 
 export interface MetaInfo {
     key: string;
@@ -392,4 +428,8 @@ export interface CompoundQueryBody {
     conditions: ConditionType[];// Conditions applied on fields (eq, gte, like, etc.)
     values: (string | number)[];// Values to match against the fields
     logic?: LogicType[];        // Logical operators to combine conditions (and/or)
-  }
+}
+
+
+
+

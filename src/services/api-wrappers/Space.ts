@@ -1,4 +1,4 @@
-import { GarchiCategory, GarchiSpace, GarchiSpaceAPIResponse, GarchiSpaceCreate, PaginateQueryParams } from "../../types";
+import { CreatePageResponse, GarchiCategory, GarchiSpace, GarchiSpaceAPIResponse, GarchiSpaceCreate, PaginatedResponse, PaginateQueryParams, SectionTemplate } from "../../types";
 import APIClient from "../APIClient";
 
 class Space extends APIClient {
@@ -97,7 +97,27 @@ class Space extends APIClient {
         }
     }
 
+    async listPages(space_uid: string) : Promise<CreatePageResponse[]> {
+        try {
+            const response = await this.client.get(`/space/${space_uid}/pages`);
+            const data = response.data
+            return data as CreatePageResponse[];
+        }
+        catch (error: any) {
+            throw error.response?.data || new Error("Network Error");
+        }
+    }
+
+    async listSectionTemplates(space_uid: string) : Promise<SectionTemplate[]> {
+        try {
+            const response = await this.client.get(`/space/${space_uid}/section_templates`);
+            const data = response.data
+            return data as SectionTemplate[];
+        }
+        catch (error: any) {
+            throw error.response?.data || new Error("Network Error");
+        }
+    }
+
 }
-
-
 export default Space;

@@ -1,4 +1,4 @@
-import { CreateOrUpdateSectionTemplateParams, GarchiAsset, GarchiPage, GetPageParams } from "../../types";
+import { BlankSectionRequest, BlankSectionResponse, CreateOrUpdateSectionTemplateParams, CreatePageRequest, CreatePageResponse, GarchiAsset, GarchiPage, GetPageParams } from "../../types";
 import APIClient from "../APIClient";
 
 class Headless extends APIClient {
@@ -36,6 +36,37 @@ class Headless extends APIClient {
         }
     }
 
+    async addPage(params: CreatePageRequest) : Promise<CreatePageResponse>
+    {
+        try {
+            const response = await this.client.post(`/space/${params.space_uid}/create_page`, {
+                title: params.title,
+                path: params.path,
+                description: params.description,
+            })
+            return response.data as CreatePageResponse;
+        }
+        catch (error: any) {
+            throw error.response?.data || new Error("Network Error");
+        }
+    }
+
+    async addBlankSectionToPage(params: BlankSectionRequest) : Promise<BlankSectionResponse>
+    {
+        try {
+            const response = await this.client.post('/page/add_blank_section', {
+                section_template_id: params.section_template_id,
+                parent_id: params.parent_id,
+                page_id: params.page_id,
+            })
+            return response.data as BlankSectionResponse;
+        }
+        catch (error: any) {
+            throw error.response?.data || new Error("Network Error");
+        }
+    }
+    
+    
 }
 
 export default Headless;
