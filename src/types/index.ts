@@ -63,6 +63,7 @@ export type CreatePageResponse = {
     title: string;
     path?: string;
     slug?: string;
+    agent_description?: string;
     description: string;
     image?: string;
     created_at?: string;
@@ -75,6 +76,7 @@ export type GarchiPage = {
     title: string
     slug: string
     description: string
+    agent_description?: string;
     image?: string
     sections: GarchiSection[]
 }
@@ -92,7 +94,8 @@ export interface SectionTemplateProp {
 // Section Template Interface
 export interface SectionTemplate {
   name: string;                       // Name of the section template
-  description?: string;               // Optional: Description of the section template
+  description?: string;  
+  agent_description?: string;             // Optional: Description of the section template
   prev_name?: string;                 // Optional: Previous name (for updating existing templates)
   props?: SectionTemplateProp[];
   id?: string;     
@@ -187,12 +190,14 @@ export type GarchiSpace = {
     uid: string
     name: string
     logo_url?: string
+    agent_description?: string;
     number_of_items: number
 }
 
 export type GarchiSpaceCreate = {
     name: string
     logo?: File
+    agent_description?: string;
 }
 
 export type GarchiSpaceAPIResponse = PaginatedResponse<GarchiSpace>
@@ -208,6 +213,7 @@ export type GarchiItem = {
     item_id: number;
     slug: string;
     sku?: string;
+    agent_description?: string;
     name: string;
     stock?: number;
     categories: GarchiCategory[];
@@ -259,6 +265,7 @@ export interface CreateDataItemParams {
     detail_description?: string;
     external_url?: string;
     slug?: string;
+    agent_description?: string;
 }
 
 export interface DeleteDataItemParams {
@@ -280,6 +287,7 @@ export interface UpdateDataItemParams {
     external_url?: string;
     make_public?: boolean;
     slug?: string;
+    agent_description?: string;
 }
 
 
@@ -289,6 +297,7 @@ export interface MetaInfo {
     key: string;
     type: MetaType;
     value: string;
+    agent_description?: string;
 }
 
 export interface CreateMetaInfoParams {
