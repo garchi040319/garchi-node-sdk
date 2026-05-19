@@ -246,6 +246,7 @@ export type GarchiAsset = {
     path: string;
     size: string;
     type: string;
+    agent_description?: string;
 }
 
 
