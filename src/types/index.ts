@@ -56,6 +56,8 @@ export type CreatePageRequest = {
     title: string;
     path: string;
     description: string;
+    agent_description?: string;
+    json_ld?: string
 }
 
 export type CreatePageResponse = {
@@ -64,6 +66,7 @@ export type CreatePageResponse = {
     path?: string;
     slug?: string;
     agent_description?: string;
+    json_ld?: string;
     description: string;
     image?: string;
     created_at?: string;
@@ -77,6 +80,7 @@ export type GarchiPage = {
     slug: string
     description: string
     agent_description?: string;
+    json_ld?: string
     image?: string
     sections: GarchiSection[]
 }
