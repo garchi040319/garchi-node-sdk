@@ -216,6 +216,9 @@ export type GarchiItemMeta = {
 export type GarchiItem = {
     item_id: number;
     slug: string;
+    parent_id?: number | null;  // The item this item is inside, or null when it is on its own
+    children_count?: number;  // How many published items are inside this item
+    children?: GarchiItem[];  // The published items inside, in order; only with children: "include"
     sku?: string;
     agent_description?: string;
     name: string;
@@ -271,6 +274,7 @@ export interface CreateDataItemParams {
     external_url?: string;
     slug?: string;
     agent_description?: string;
+    parent_id?: number;  // Id of the item this one goes inside, in the same space (up to three levels)
 }
 
 export interface DeleteDataItemParams {
@@ -293,6 +297,7 @@ export interface UpdateDataItemParams {
     make_public?: boolean;
     slug?: string;
     agent_description?: string;
+    parent_id?: number | null;  // Move inside another item of the same space; null takes it out on its own; omit to keep its place
 }
 
 
@@ -336,6 +341,7 @@ export interface ItemsQueryParams extends PaginateQueryParams {
     order_by?: "asc" | "desc";  // Sort order
     reactions?: "include" | "exclude";  // Include or exclude reactions
     description?: "include" | "exclude";  // Include or exclude markdown descriptions
+    children?: "include" | "exclude";  // Include the published items inside each item (one level)
 }
 
 export interface GetItemsBySpaceParams extends ItemsQueryParams {
@@ -348,16 +354,69 @@ export interface SemanticSearchParams {
     threshold?: number;  // Optional threshold between 0-1 (default 0.5)
     reactions?: "include" | "exclude";  // Include or exclude reactions
     description?: "include" | "exclude";  // Include or exclude markdown description
+    children?: "include" | "exclude";  // Include the published items inside each item (one level)
 }
 
 export interface GetFeaturedItemsParams {
     reactions?: "include" | "exclude";  // Include or exclude reactions
     description?: "include" | "exclude";  // Include or exclude markdown description
+    children?: "include" | "exclude";  // Include the published items inside each item (one level)
 }
 
 export interface GetItemParams {
     item: string | number;  // Required: ID or slug of the item
     reactions?: "include" | "exclude";  // Optional: Include or exclude reactions
+    children?: "include" | "exclude";  // Optional: Include the published items inside the item (one level)
+}
+
+export interface GetItemChildrenParams extends PaginateQueryParams {
+    uid: string;  // Required: UID of the space
+    item: string | number;  // Required: ID or slug of the parent item
+    reactions?: "include" | "exclude";
+    description?: "include" | "exclude";
+    children?: "include" | "exclude";  // Include the items inside each child as well
+}
+
+/** Operators of the item query endpoint. */
+export type ItemQueryOperator =
+    | "eq" | "ne" | "gt" | "gte" | "lt" | "lte" | "between"
+    | "in" | "not_in" | "contains" | "starts_with"
+    | "exists" | "not_exists" | "has_all";
+
+/**
+ * Item fields, or `meta.<key>` with dots into JSON objects (e.g. `meta.specs.weight`).
+ * `parent_id` finds the items inside an item; `not_exists` on it finds items on their own.
+ */
+export type ItemQueryField =
+    | "item_id" | "name" | "slug" | "sku" | "price" | "scratched_price" | "stock"
+    | "created" | "updated" | "category" | "type" | "parent_id" | "position"
+    | `meta.${string}`;
+
+export interface ItemQueryCondition {
+    field: ItemQueryField;
+    op: ItemQueryOperator;
+    value?: string | number | boolean | Array<string | number | boolean>;  // Not used by exists / not_exists
+}
+
+/** A condition, a group where every entry must match, or a group where at least one must. */
+export type ItemQueryWhere =
+    | ItemQueryCondition
+    | { all: ItemQueryWhere[] }
+    | { any: ItemQueryWhere[] }
+    | ItemQueryWhere[];
+
+export interface ItemQuerySort {
+    field: Exclude<ItemQueryField, "category" | "type">;
+    direction?: "asc" | "desc";
+}
+
+export interface QueryItemsParams extends PaginateQueryParams {
+    uid: string;  // Required: UID of the space
+    where?: ItemQueryWhere;
+    sort?: ItemQuerySort[];  // Up to three fields
+    reactions?: "include" | "exclude";
+    description?: "include" | "exclude";
+    children?: "include" | "exclude";
 }
 
 export interface GetAllItemsParams extends ItemsQueryParams {

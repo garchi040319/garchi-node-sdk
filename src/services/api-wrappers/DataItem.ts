@@ -1,6 +1,6 @@
 
 
-import { CreateDataItemParams, CreateMetaInfoParams, DeleteDataItemParams, DeleteMetaInfoParams, FilterItemsByMetaParams, FilterItemsParams, GarchiItem, GarchiItemAPIResponse, GarchiItemMeta, GetAllItemsParams, GetFeaturedItemsParams, GetItemParams, GetItemsByIdsParams, GetItemsBySpaceParams, SemanticSearchParams, UpdateDataItemParams, UpdateMetaInfoParams } from "../../types";
+import { CreateDataItemParams, CreateMetaInfoParams, DeleteDataItemParams, DeleteMetaInfoParams, FilterItemsByMetaParams, FilterItemsParams, GarchiItem, GarchiItemAPIResponse, GarchiItemMeta, GetAllItemsParams, GetFeaturedItemsParams, GetItemChildrenParams, GetItemParams, GetItemsByIdsParams, GetItemsBySpaceParams, QueryItemsParams, SemanticSearchParams, UpdateDataItemParams, UpdateMetaInfoParams } from "../../types";
 import APIClient from "../APIClient";
 
 class DataItem extends APIClient {
@@ -181,6 +181,38 @@ class DataItem extends APIClient {
             });
             const data = response.data as GarchiItemAPIResponse;
             return data;
+        }
+        catch (error: any) {
+            throw error.response?.data || new Error("Network Error");
+        }
+    }
+
+    /**
+     * Query the published items of a space with conditions on their fields and
+     * metadata, including nested JSON values. See the API docs for the operators.
+     */
+    async query(params: QueryItemsParams): Promise<GarchiItemAPIResponse> {
+        try {
+            const { uid, ...body } = params;
+            const response = await this.client.post(`/space/${uid}/items/query`, body);
+            return response.data as GarchiItemAPIResponse;
+        }
+        catch (error: any) {
+            throw error.response?.data || new Error("Network Error");
+        }
+    }
+
+    /**
+     * The published items inside an item (variants of a product, lessons of a
+     * course), in their order. The parent itself must be published.
+     */
+    async getChildren(params: GetItemChildrenParams): Promise<GarchiItemAPIResponse> {
+        try {
+            const { uid, item, ...query } = params;
+            const response = await this.client.get(`/space/${uid}/items/${encodeURIComponent(String(item))}/children`, {
+                params: query
+            });
+            return response.data as GarchiItemAPIResponse;
         }
         catch (error: any) {
             throw error.response?.data || new Error("Network Error");

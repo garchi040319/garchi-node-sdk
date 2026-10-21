@@ -1,5 +1,4 @@
-import { APIKEY, SPACEUID } from "../src/test_prepare";
-import APIClient from "../src/services/APIClient";
+const SPACEUID = "test-space-uid";
 import MockAdapter from "axios-mock-adapter";
 import GarchiCMS from "../src/services/GarchiCMS";
 import { 
@@ -9,9 +8,10 @@ import {
   GarchiCategory 
 } from "../src/types";
 
-const apiClientInstance = new APIClient({ api_key: APIKEY }).client;
-const mock = new MockAdapter(apiClientInstance);
-const client = new GarchiCMS({ api_key: APIKEY });
+// The mock sits on the SDK's own axios instance, and any request without a
+// mock fails here: these tests never reach the network or a real account.
+const client = new GarchiCMS({ api_key: "test-key" });
+const mock = new MockAdapter(client.category.client, { onNoMatch: "throwException" });
 
 describe("Category API Wrapper", () => {
   afterEach(() => {
@@ -65,6 +65,6 @@ describe("Category API Wrapper", () => {
     const response = await client.category.getAll();
     expect(Array.isArray(response)).toBe(true);
     expect(response.length).toBe(2);
-    expect(response[0]).toMatchObject<GarchiCategory[]>([{ id: 1, name: "Category 1" }]);
+    expect(response[0]).toMatchObject<GarchiCategory>({ id: 1, name: "Category 1" } as GarchiCategory);
   });
 });

@@ -1,4 +1,4 @@
-import { APIKEY, SPACEUID } from "../src/test_prepare";
+const SPACEUID = "test-space-uid";
 
 import MockAdapter from "axios-mock-adapter";
 import GarchiCMS from "../src/services/GarchiCMS";
@@ -17,15 +17,16 @@ import {
   FilterItemsParams,
   FilterItemsByMetaParams,
   GetItemsByIdsParams,
+  QueryItemsParams,
+  GetItemChildrenParams,
   GarchiItem,
   GarchiItemAPIResponse,
 } from "../src/types";
-import APIClient from "../src/services/APIClient";
 
-// Mocking axios
-const apiClient = new APIClient ({ api_key: APIKEY }).client;
-const mock = new MockAdapter(apiClient);
-const client = new GarchiCMS({ api_key: APIKEY });
+// The mock sits on the SDK's own axios instance, and any request without a
+// mock fails here: these tests never reach the network or a real account.
+const client = new GarchiCMS({ api_key: "test-key" });
+const mock = new MockAdapter(client.dataItem.client, { onNoMatch: "throwException" });
 
 describe("DataItem API Wrapper", () => {
   afterEach(() => {
@@ -174,5 +175,37 @@ describe("DataItem API Wrapper", () => {
 
     const response = await client.dataItem.getByIds(params);
     expect(response).toEqual(mockData);
+  });
+
+  it("should query items with nested conditions", async () => {
+    const mockData = { data: [{ item_id: 12, name: "Large", slug: "large", categories: [], parent_id: 10, children_count: 0 }], links: {}, meta: {} };
+    const params: QueryItemsParams = {
+      uid: SPACEUID,
+      where: { all: [{ field: "parent_id", op: "eq", value: 10 }, { field: "meta.color", op: "in", value: ["red", "blue"] }] },
+      sort: [{ field: "position", direction: "asc" }],
+      size: 5,
+    };
+
+    mock.onPost(`/space/${SPACEUID}/items/query`).reply((config) => {
+      const body = JSON.parse(config.data);
+      expect(body).toEqual({ where: params.where, sort: params.sort, size: 5 });
+      return [200, mockData];
+    });
+
+    const response = await client.dataItem.query(params);
+    expect(response.data[0].parent_id).toBe(10);
+  });
+
+  it("should get the items inside an item", async () => {
+    const mockData = { data: [{ item_id: 12, name: "Large", slug: "large", categories: [], parent_id: 10, children_count: 0 }], links: {}, meta: {} };
+    const params: GetItemChildrenParams = { uid: SPACEUID, item: "oak table", size: 20, children: "include" };
+
+    mock.onGet(`/space/${SPACEUID}/items/oak%20table/children`).reply((config) => {
+      expect(config.params).toEqual({ size: 20, children: "include" });
+      return [200, mockData];
+    });
+
+    const response = await client.dataItem.getChildren(params);
+    expect(response.data.map((item: GarchiItem) => item.item_id)).toEqual([12]);
   });
 });

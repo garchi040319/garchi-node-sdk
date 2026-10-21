@@ -97,6 +97,8 @@ Each module corresponds to a specific API group:
   - garchi.dataItem.filter() corresponds to [Filter data items API](https://garchi.co.uk/docs/v2#item-POSTapi-v2-items-filter)
   - garchi.dataItem.filterByMeta() corresponds to [Filter data items by meta information API](https://garchi.co.uk/docs/v2#item-POSTapi-v2-items-filter-bymeta)
   - garchi.dataItem.getByIds() corresponds to [Get data items by IDs API](https://garchi.co.uk/docs/v2#item-POSTapi-v2-items-byids) 
+  - garchi.dataItem.query() corresponds to [Query items API](https://garchi.co.uk/docs/v2#item-POSTapi-v2-space--uid--items-query)
+  - garchi.dataItem.getChildren() corresponds to [List the items inside an item API](https://garchi.co.uk/docs/v2#item-GETapi-v2-space--uid--items--item--children)
   
   
 - garchi.category → Category API
@@ -158,6 +160,40 @@ const newItem = await garchi.dataItem.create({
 
 ```typescript
 const items = await client.dataItem.getAll({ size: 10 });
+```
+
+#### Query items by their fields and metadata
+
+```typescript
+const items = await garchi.dataItem.query({
+  uid: 'your_space_uid',
+  where: {
+    all: [
+      { field: 'meta.color', op: 'in', value: ['red', 'blue'] },
+      { field: 'price', op: 'lte', value: 50 },
+    ],
+  },
+  sort: [{ field: 'price', direction: 'asc' }],
+  size: 20,
+});
+```
+
+#### Items inside items (variants, lessons)
+
+A data item can sit inside another one, such as a variant inside its product or a lesson inside its course. Every item has `parent_id` and `children_count`; pass `children: 'include'` to get the items inside as well.
+
+```typescript
+// The published items inside a product, in their order
+const variants = await garchi.dataItem.getChildren({ uid: 'your_space_uid', item: 'oak-table' });
+
+// A product with its variants in one call
+const product = await garchi.dataItem.get({ item: 'oak-table', children: 'include' });
+
+// Create a variant inside a product
+await garchi.dataItem.create({ space_uid: 'your_space_uid', name: 'Oak table - large', categories: [1], parent_id: 48 });
+
+// Top-level items only
+const topLevel = await garchi.dataItem.query({ uid: 'your_space_uid', where: { field: 'parent_id', op: 'not_exists' } });
 ```
 
 ### Category API
